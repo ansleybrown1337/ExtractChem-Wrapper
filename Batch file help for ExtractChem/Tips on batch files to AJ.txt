@@ -1,0 +1,15 @@
+Calcite molar mass 40.078+12.011+48=100.089, meq mass = 50.0445 mg/meq
+Calcite mass used internally in ExtractChem is in units of meq/kg
+
+Gypsum molar mass 40.078+32.06+64+36=172.138 (gypsum)=86.069 mg/meq
+Gypsum molar mass used internally in ExtractChem is in units of meq/kg
+
+Initial values of exchangeable cations not important. 
+
+Steps for processing files.
+-copy batch file data from ExtractChem Modeling Results spreadsheet
+-add in three header lines, ExChem, 2.0.0, and 16 (number of samples)
+-save as CSV
+-change CSV extension to xcb extension, run in ExtractChem as batch file
+-results are generated automatically
+

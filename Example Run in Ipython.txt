@@ -1,0 +1,129 @@
+
+In [1]: cd {insert correct file path here}
+
+In [2]: %load_ext autoreload
+
+In [3]: %autoreload 2
+
+In [4]: %matplotlib qt
+
+In [5]: import ExtractChem_batch_merge as e; import EC_graphs as a
+
+In [6]: directory = {insert correct file path to data here}
+
+In [7]: e.batch_file(directory, initial_type='Paste', output='batchResult', input='AJBatch', water_change=False, gypsum
+   ...: =True, calcite = True, ion_mult=1)
+Final EC = ECe, and water content is unchanged
+ions at 100%
+Gypsum is included in batch file
+
+>>>>>>>>>>>>>>>>>>>>>>>>> RUN EXTRACTCHEM HERE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+In [9]: e.merge_out(dir=directory, output="result_all.csv", subfolder_layers=0, csv=True)
+
+In [10]: df = e.final_result(directory, batch='AJBatch.csv', result='result_all.csv', final_type='Paste')
+
+In [13]: a.categories(df); a.bern(df) 
+
+In [20]: a.ion_plots(df, final_type='ECe', change=False, directory=directory, save=False)
+
+In [12]: a.int_fit(^M
+    ...:     # no-intercept model; k-folds validation^M
+    ...:     df,^M
+    ...:     threshold = 3.08,^M
+    ...:     xcol = 'ECe',^M
+    ...:     ycol = 'Final EC',^M
+    ...:     xlab = '$EC_{e, obs}$ (dS $m^{-1})$',^M
+    ...:     ylab = 'Callaghan (2016) $EC_{e, g}$ (dS $m^{-1}$)',^M
+    ...:     summary_plots = False,^M
+    ...:     errorbar = True)
+The average ECe shift is: 1.4597315135135134
+The median ECe shift is: 1.4405269209559108
+The range of ECe shifts is: 0.9931632153506165 to 2.619308568541122
+the calibration RMSE is: 0.8021941749904611
+the calibration MAE is: 0.6447309728072668
+the calibration R^2 is: 0.9528943640018444
+the average k-fold RMSE (10 folds, 100 repititions) is: 0.8059657943839765
+the k-fold MAE (10 folds, 100 repititions) is: 0.684281515227705
+the k-fold R^2 (10 folds, 100 repititions) is: 0.7873930213637484
+                            OLS Regression Results
+==============================================================================
+Dep. Variable:               Final EC   R-squared:                       0.953
+Model:                            OLS   Adj. R-squared:                  0.952
+Method:                 Least Squares   F-statistic:                     708.0
+Date:                Tue, 06 Oct 2020   Prob (F-statistic):           8.23e-25
+Time:                        12:41:26   Log-Likelihood:                -44.346
+No. Observations:                  37   AIC:                             92.69
+Df Residuals:                      35   BIC:                             95.91
+Df Model:                           1
+Covariance Type:            nonrobust
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+const         -0.7256      0.320     -2.266      0.030      -1.376      -0.076
+ECe            0.9131      0.034     26.608      0.000       0.843       0.983
+==============================================================================
+Omnibus:                        1.725   Durbin-Watson:                   1.286
+Prob(Omnibus):                  0.422   Jarque-Bera (JB):                1.595
+Skew:                           0.472   Prob(JB):                        0.450
+Kurtosis:                       2.622   Cond. No.                         22.2
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+95% CI
+              0         1
+const -1.375556 -0.075671
+ECe    0.843465  0.982801
+LeveneResult(statistic=37.94148710941582, pvalue=3.753400926773374e-08)
+
+In [13]: a.int_fit(^M
+    ...:     # no-intercept model; k-folds validation^M
+    ...:     df,^M
+    ...:     threshold = 3.08,^M
+    ...:     xcol = 'ECe',^M
+    ...:     ycol = 'bern_ECeg',^M
+    ...:     xlab = '$EC_{e, obs}$ (dS $m^{-1})$',^M
+    ...:     ylab = 'Selective Dilution $EC_{e, g}$ (dS $m^{-1}$)',^M
+    ...:     summary_plots = False,^M
+    ...:     errorbar = False)
+The average ECe shift is: 1.1446046881362317
+The median ECe shift is: 1.142637569986027
+The range of ECe shifts is: 1.0968142981618914 to 1.2633796668119537
+the calibration RMSE is: 0.1915409737235366
+the calibration MAE is: 0.14098043130240256
+the calibration R^2 is: 0.9976133643577201
+the average k-fold RMSE (10 folds, 100 repititions) is: 0.17892470951287925
+the k-fold MAE (10 folds, 100 repititions) is: 0.14960780176609173
+the k-fold R^2 (10 folds, 100 repititions) is: 0.9710998342114737
+                            OLS Regression Results
+==============================================================================
+Dep. Variable:              bern_ECeg   R-squared:                       0.998
+Model:                            OLS   Adj. R-squared:                  0.998
+Method:                 Least Squares   F-statistic:                 1.463e+04
+Date:                Tue, 06 Oct 2020   Prob (F-statistic):           1.73e-47
+Time:                        12:46:03   Log-Likelihood:                 8.6475
+No. Observations:                  37   AIC:                            -13.29
+Df Residuals:                      35   BIC:                            -10.07
+Df Model:                           1
+Covariance Type:            nonrobust
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+const         -1.0694      0.076    -13.990      0.000      -1.225      -0.914
+ECe            0.9911      0.008    120.955      0.000       0.974       1.008
+==============================================================================
+Omnibus:                       24.546   Durbin-Watson:                   1.828
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               46.939
+Skew:                           1.656   Prob(JB):                     6.42e-11
+Kurtosis:                       7.413   Cond. No.                         22.2
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+95% CI
+              0         1
+const -1.224597 -0.914222
+ECe    0.974468  1.007737
+LeveneResult(statistic=56.97458983836085, pvalue=1.0662664315867699e-10)
+
